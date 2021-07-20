@@ -1,11 +1,12 @@
 const puppeteer = require('puppeteer');
-const sanitize = require('sanitize-filename');
+const nodemailer = require('nodemailer');
+
 
 const sites = [
-  "http://brkhnudd.myraidbox.de/",
+/*   "http://brkhnudd.myraidbox.de/",
   "http://b2rzk986.myraidbox.de/",
   "http://b3mfy0.myraidbox.de/",
-  "http://b3mfy0.myraidbox.de/",
+  "http://b3mfy0.myraidbox.de/", */
   "https://ganteroptik.de/",
   "https://augenoptik-sabrina-buhl.de/",
   "https://luedemann2.de/",
@@ -28,15 +29,36 @@ const sites = [
   "https://vas-medicus.de/"
 ];
 
+const ignoredFileTypes = [
+  "mp4",
+  "woff2",
+  "woff",
+  "ttf"
+]
+
+
+let transporter = nodemailer.createTransport({
+  sendmail: true,
+  newline: 'unix'
+});
+
+// quick hack, make sure added items are unique
+const fdSites = new Set();
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/chromium-browser'
+  });
+
   const page = await browser.newPage();
+
   await page.on('requestfailed', (request) => {
     // do nothing if the filename contains mp4 since mp4 encoders are not shipped by puppeteer
-    if(request.url().split(".").pop() === "mp4") return;
-/*     console.log(request); */
+    const filetype = request.url().split(".").pop();
+    if(ignoredFileTypes.includes(filetype)) return;
+
     console.log(`${request.failure().errorText} ${request.url()}`)
+    fdSites.add(request.headers().referer);
   });
 
   for (const site of sites) {
@@ -44,7 +66,21 @@ const sites = [
       waitUntil: 'networkidle2'
     });
   }
-
+  
   await browser.close();
 
+  if(fdSites.size > 0) {
+    // spread items to array since sets cant be joined like that
+    const text = `Kaputte Seiten (cache):\n${[...fdSites].join('\n')}`;
+
+    transporter.sendMail({
+      from: 'derraspberry@pi.com',
+      to: ['info@luedemann2.de', 'kelevra.1337@gmail.com'],
+      subject: 'Eine oder mehrere Seiten sind kaputt',
+      text
+    }, (err, info) => {
+      console.log(info.envelope);
+      console.log(info.messageId);
+    });
+  }
 })();

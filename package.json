@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "puppeteer": "^10.1.0",
-    "sanitize-filename": "^1.6.3"
+    "nodemailer": "^6.6.3",
+    "puppeteer": "^10.1.0"
   }
 }
