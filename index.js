@@ -44,6 +44,7 @@ let transporter = nodemailer.createTransport({
 });
 
 const main = async () => {
+  console.log("scan starting")
   // quick hack, make sure added items are unique
   const fdSites = new Set();
   try{
@@ -62,23 +63,31 @@ const main = async () => {
       fdSites.add(request.headers().referer);
     });
 
+    // basically running synchronously
     for (const site of sites) {
+      console.log(`navigating to ${site}`)
       await page.goto(site, {
         waitUntil: 'networkidle2'
       });
     }
 
     await browser.close();
+    console.log("closing browser");
 
   }catch(err){
     console.log("ERRRRR");
     console.log(err);
   }
 
+  console.log(`found ${fdSites.size} broken sites`)
+
 
   if(fdSites.size > 0) {
-    // spread items to array since sets cant be joined like that
     const text = `Kaputte Seiten (cache):\n${[...fdSites].join('\n')}`;
+
+    console.log("reporting broken sites")
+    console.log(text);
+    // spread items to array since sets cant be joined like that
 
     transporter.sendMail({
       from: 'derraspberry@pi.com',
@@ -92,6 +101,7 @@ const main = async () => {
   }
 };
 
+main();
 
 cron.schedule('0 */6 * * *', async () => {
   main();
