@@ -66,9 +66,13 @@ const main = async () => {
     // basically running synchronously
     for (const site of sites) {
       console.log(`navigating to ${site}`)
-      await page.goto(site, {
-        waitUntil: 'networkidle2'
-      });
+      try{
+        await page.goto(site, {
+          waitUntil: 'networkidle2'
+        });
+      }catch(err) {
+        console.log(err);
+      }
     }
 
     await browser.close();
