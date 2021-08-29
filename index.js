@@ -21,6 +21,8 @@ const sites = [
   "https://mein-fenster-klemmt.de/",
   "https://eunomia-inkasso.de/",
   "https://berufseinstieg-bundeswehr.de/",
+  "https://berufseinstieg-bundeswehr.de/blog",
+  "https://berufseinstieg-bundeswehr.de/blog/fit-als-soldatin-fett-abbauen-und-muskeln-aufbauen/",
   "https://oralchirurgie-westerwald.de/",
   "https://dr-wiechert.com/",
   "https://newport-optik.de/",
