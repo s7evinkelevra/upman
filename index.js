@@ -37,7 +37,15 @@ const ignoredFileTypes = [
   "woff2",
   "woff",
   "ttf"
-]
+];
+
+const ignoredHosts = [
+
+];
+
+const irgnoredURLs = [
+  "https://graphql.usercentrics.eu/graphql",
+];
 
 
 let transporter = nodemailer.createTransport({
@@ -47,6 +55,7 @@ let transporter = nodemailer.createTransport({
 
 const main = async () => {
   console.log("scan starting")
+  console.time("scan");
   // quick hack, make sure added items are unique
   const fdSites = new Set();
   try{
@@ -57,9 +66,14 @@ const main = async () => {
     const page = await browser.newPage();
 
     await page.on('requestfailed', (request) => {
+      const url = new URL(request.url());
+      const {href, host, pathname} = url;
+      const filetype = pathname.split(".").pop();
+
       // do nothing if the filename contains mp4 since mp4 encoders are not shipped by puppeteer
-      const filetype = request.url().split(".").pop();
       if (ignoredFileTypes.includes(filetype)) return;
+      if (ignoredHosts.includes(host)) return;
+      if (irgnoredURLs.includes(href)) return;
 
       console.log(`${request.failure().errorText} ${request.url()}`)
       fdSites.add(request.headers().referer);
@@ -70,7 +84,8 @@ const main = async () => {
       console.log(`navigating to ${site}`)
       try{
         await page.goto(site, {
-          waitUntil: 'networkidle2'
+          waitUntil: 'networkidle2',
+          timeout: 100000
         });
       }catch(err) {
         console.log(err);
@@ -85,8 +100,8 @@ const main = async () => {
     console.log(err);
   }
 
+  console.timeEnd("scan");
   console.log(`found ${fdSites.size} broken sites`)
-
 
   if(fdSites.size > 0) {
     const text = `Kaputte Seiten (cache):\n${[...fdSites].join('\n')}`;
