@@ -73,6 +73,7 @@ const main = async () => {
 
       console.log(`${request.failure().errorText} ${request.url()}`)
       fdSites.add(request.headers().referer);
+      console.log({fdSites});
     });
 
     // basically running synchronously
@@ -98,6 +99,7 @@ const main = async () => {
 
   console.timeEnd("scan");
   console.log(`found ${fdSites.size} broken sites`)
+  console.log({fdSites});
 
   if(fdSites.size > 0) {
     const text = `Kaputte Seiten (cache):\n${[...fdSites].join('\n')}`;
