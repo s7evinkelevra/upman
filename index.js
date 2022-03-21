@@ -72,7 +72,9 @@ const main = async () => {
       if (irgnoredURLs.includes(href)) return;
 
       console.log(`${request.failure().errorText} ${request.url()}`)
-      fdSites.add(request.headers().referer);
+      if (request.headers().referer){
+        fdSites.add(request.headers().referer);
+      }
       console.log({fdSites});
     });
 
