@@ -4,8 +4,6 @@ const cron = require('node-cron');
 
 
 const sites = [
-  "http://brkhnudd.myraidbox.de/",
-  "http://b3mfy0.myraidbox.de/",
   "http://b3mfy0.myraidbox.de/",
   "https://ganteroptik.de/",
   "https://augenoptik-sabrina-buhl.de/",
@@ -13,7 +11,6 @@ const sites = [
   "https://zahnarztpraxis-andrzejewski.com/",
   "https://eyeworks-store.de/",
   "https://bremen-optiker.de/",
-  "https://dienstleistungen-schroeder.de/",
   "https://rasenservice-luedemann.de/",
   "https://eunomia-inkasso.de/",
   "https://berufseinstieg-bundeswehr.de/",
