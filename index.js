@@ -22,7 +22,8 @@ const sites = [
   "https://lehrerversorgung.info/",
   "https://holzwerkstatt-pfaff.de/",
   "https://fit4bpol.de/",
-  "https://vas-medicus.de/"
+  "https://vas-medicus.de/",
+  "http://qmb-dienstleistungen.de/"
 ];
 
 const ignoredFileTypes = [
