@@ -9,7 +9,6 @@ const sites = [
   "https://augenoptik-sabrina-buhl.de/",
   "https://luedemann2.de/",
   "https://zahnarztpraxis-andrzejewski.com/",
-  "https://eyeworks-store.de/",
   "https://bremen-optiker.de/",
   "https://rasenservice-luedemann.de/",
   "https://eunomia-inkasso.de/",
